@@ -1,6 +1,15 @@
 const cloudinary = require('cloudinary')
 const colors = require('colors')
 
+/* ============================= BEGIN CUSTOMIZATION ============================================ */
+// Step 0: Define the definition transformation
+const transformationName = 'auto-400-xform'
+const transformationDefinition = {
+  width: 600,
+  height: 600
+}
+/* ============================= END CUSTOMIZATION ============================================== */
+
 /**
  * Helper function to update the Cloudinary transformation. It always does an unsafe_update.
  * This method cannot be used to create a new transformation.
@@ -19,6 +28,9 @@ async function updateTransformation (transformationName, transformationDefinitio
 }
 
 /**
+ * This function is used to retrive the definition of the named transformation.
+ * The end goal is to print the new definition.
+ * Doing so can help users can visually validate that the transforamation has been successfully update.
  *
  * @param {String} transformationName
  * @returns {Object}
@@ -28,6 +40,8 @@ async function getTransformationDefinition (transformationName) {
 }
 
 /**
+ * Finds all the derivatives for a named transformation and returns an object containing the count of
+ * derived resources and a list of the ids for these derived resources.
  *
  * @param {Object} transformation
  * @param {String} nextCursor
@@ -60,6 +74,7 @@ async function findDerivatives (transformation, nextCursor = null) {
 }
 
 /**
+ * Deletes the list of derived resources in batches of 100 using the Admin API delete method.
  *
  * @param {Number} count
  * @param {Array} resources
@@ -76,7 +91,7 @@ async function deleteDerivatives (count, resources) {
 }
 
 /**
- *
+ * An async function to orchestrate the multiple steps. All console messages are printed from here.
  */
 async function main () {
   try {
@@ -118,13 +133,6 @@ async function main () {
       }
     }
   }
-}
-
-// Step 0: Define the definition transformation
-const transformationName = 'auto-400-xform'
-const transformationDefinition = {
-  width: 600,
-  height: 600
 }
 
 main()
